@@ -1,34 +1,39 @@
 import { Injectable, Delete, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+// import { CreateUserDto } from './dto/create-user.dto';
+// import { UpdateUserDto } from './dto/update-user.dto';
+import { Prisma } from 'generated/prisma';
+
 
 @Injectable()
 export class UsersService {
-
+  private users = [];
   ///////////////////MY CUSTOM METHODS START//////////////////////////////
-  private users = [
-    {
-      "id" : 1,
-      "name" : "Alpha Dev",
-      "email" : "alphadev@nemi.com",
-      "role" : "SUPER-ADMIN",
-    },
-       {
-      "id" : 2,
-      "name" : "Alpha XVI",
-      "email" : "alphaxvi@nemi.com",
-      "role" : "TEACHER",
-    },
-    {
-      "id" : 3,
-      "name" : "Alpha",
-      "email" : "Alpha@nemi.com",
-      "role" : "STUDENT",
-    }
-  ]
+  // private users = [
+  //   {
+  //     "id" : 1,
+  //     "name" : "Alpha Dev",
+  //     "email" : "alphadev@nemi.com",
+  //     "role" : "SUPER_ADMIN",
+  //     "password": "12345678"
+  //   },
+  //      {
+  //     "id" : 2,
+  //     "name" : "Alpha XVI",
+  //     "email" : "alphaxvi@nemi.com",
+  //     "role" : "TEACHER",
+  //     "password": "12345678"
+  //   },
+  //   {
+  //     "id" : 3,
+  //     "name" : "Alpha",
+  //     "email" : "Alpha@nemi.com",
+  //     "role" : "USER",
+  //     "password": "12345678"
+  //   }
+  // ]
 
 
-    findAll(role?: 'SUPER-ADMIN'| 'ADMIN' | 'TEACHER'| 'STUDENT') {
+    findAll(role?: 'USER' | 'TEACHER' | 'ADMIN'| 'SUPER_ADMIN' ) {
 
       if(role){
        const roleArray =  this.users.filter(user => user.role === role);
@@ -45,17 +50,34 @@ export class UsersService {
 
 
 
-    create(createUserDto: CreateUserDto) {
-    const usersByHighestId = [...this.users].sort((a,b) => b.id - a.id)
-    const newUser = {
-      id: usersByHighestId[0].id + 1,
-      ...createUserDto
-    }
-    this.users.push(newUser)
+  //   create(createUserDto: Prisma.UsersCreateInput) {
+  //   const usersByHighestId = [...this.users].sort((a,b) => b.id - a.id)
+  //   const newUser = {
+  //     id: usersByHighestId[0].id + 1,
+  //     ...createUserDto
+  //   }
+  //   this.users.push(newUser)
 
-    console.log(newUser);
-    return newUser;
-  }
+  //   console.log(newUser);
+  //   return newUser;
+  // }
+
+
+  create(createUserDto: Prisma.UsersCreateInput) {
+  const usersByHighestId = [...this.users].sort((a, b) => b.id - a.id);
+
+  const newId = usersByHighestId.length > 0 ? usersByHighestId[0].id + 1 : 1;
+
+  const newUser = {
+    id: newId,
+    ...createUserDto,
+  };
+
+  this.users.push(newUser);
+
+  console.log(newUser);
+  return newUser;
+}
 
 
     findOne(id: number) {
@@ -67,7 +89,7 @@ export class UsersService {
   }
 
 
-    update(id: number , updateUserDto: UpdateUserDto) {
+    update(id: number , updateUserDto: Prisma.UsersUpdateInput) {
     this.users = this.users.map(user => {
       if(user.id === id){
         return {...user, ...updateUserDto}

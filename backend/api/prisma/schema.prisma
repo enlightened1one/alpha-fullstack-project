@@ -13,3 +13,37 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Users {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  password  String   // Use a secure hashing algorithm for passwords
+  role      userRole @default(USER)
+
+  // @@map("teachers")
+}
+
+enum userRole {
+  USER
+  TEACHER
+  ADMIN
+  SUPER_ADMIN
+}
+
+
+model Courses {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  teacherId   Int
+
+  // teacher     Users    @relation(fields: [teacherId], references: [id])
+  
+  // @@map("courses")
+}
+

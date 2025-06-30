@@ -5,5 +5,6 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
     id: number;
     name?: string;
     email?: string;
-    role?: 'SUPER-ADMIN' | 'ADMIN' | 'TEACHER' | 'STUDENT';
+    role?: 'USER' | 'TEACHER' | 'ADMIN'| 'SUPER_ADMIN' ;
+    password?: string;
 }
