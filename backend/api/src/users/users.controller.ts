@@ -4,14 +4,15 @@ import { UsersService } from './users.service';
 // import { CreateUserDto } from './dto/create-user.dto';
 // import { UpdateUserDto } from './dto/update-user.dto';
 import { Prisma } from 'generated/prisma';
+import { DatabaseService } from 'src/database/database.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService, private db: DatabaseService) {}
 
   @Post()
   create(@Body(ValidationPipe) user: Prisma.UsersCreateInput) {
-    return this.usersService.create(user);
+    return this.db.users.create({ data: user });
   }
 
 
@@ -19,7 +20,11 @@ export class UsersController {
 
    @Get()
   findAll(@Query('role') role?: 'USER' | 'TEACHER' | 'ADMIN'| 'SUPER_ADMIN'  ) {
-    return this.usersService.findAll(role);
+    return this.db.users.findMany({
+      where: {
+        role: role ? { equals: role } : undefined,
+      },
+    });
   }
 
 
