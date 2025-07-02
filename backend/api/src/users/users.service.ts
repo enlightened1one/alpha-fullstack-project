@@ -102,7 +102,7 @@ export class UsersService {
   }
 
   remove(id: number) {
-    return this.users = this.users.filter(user => user.id !== id);
+    this.users = this.users.filter(user => user.id !== id);
   }
   ///////////////MY CUSTOM METHODS CONCLUSION//////////////////////////////
 

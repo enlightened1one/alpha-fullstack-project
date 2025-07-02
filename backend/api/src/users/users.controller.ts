@@ -30,19 +30,20 @@ export class UsersController {
 
     @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) updatedUser: Prisma.UsersUpdateInput ) {
-    return this.usersService.update(id, updatedUser);
+    return this.db.users.update({ where: { id }, data: updatedUser });
   }
 
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.findOne(id);
+    return this.db.users.findUnique({ where: { id } });
   }
 
 
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.remove(id);
+     return this.db.users.delete({ where: { id } });
+
   }
 
 
