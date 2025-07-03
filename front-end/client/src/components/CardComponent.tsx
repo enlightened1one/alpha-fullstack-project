@@ -10,12 +10,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Button } from './ui/button';
 
 const CardComponent: React.FC = () => {
     return (
         <>
         <AlertDialog>
-  <AlertDialogTrigger>Open</AlertDialogTrigger>
+  <AlertDialogTrigger>  <Button className="bg-[#023047]  hover:bg-[#011f3f] cursor-pointer">Open Alert</Button></AlertDialogTrigger>
   <AlertDialogContent>
     <AlertDialogHeader>
       <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
