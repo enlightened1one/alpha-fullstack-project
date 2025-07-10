@@ -14,7 +14,7 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
+    <div  className='bg-[#181818]' >
       <h1 className='text-3xl font-bold text-yellow-500'>SchoolMan Admin</h1>
 
 
@@ -27,7 +27,7 @@ function App() {
     </div> */}
 
     <LoginFormComponent/>
-    </>
+    </div>
   )
 }
 
