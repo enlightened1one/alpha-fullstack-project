@@ -36,7 +36,9 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.db.users.findUnique({ where: { id } });
+    console.log('this user has finally been found')
+    return this.db.users.findUnique({ where: { id } }) ;
+
   }
 
 

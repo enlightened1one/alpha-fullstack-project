@@ -2,6 +2,7 @@ import { Injectable, Delete, NotFoundException } from '@nestjs/common';
 // import { CreateUserDto } from './dto/create-user.dto';
 // import { UpdateUserDto } from './dto/update-user.dto';
 import { Prisma } from 'generated/prisma';
+import { ifError } from 'node:assert';
 
 
 @Injectable()
@@ -73,6 +74,14 @@ export class UsersService {
     ...createUserDto,
   };
 
+  // ifError(!newUser.name || !newUser.email || !newUser.password, 'Name, email, and password are required fields.');
+    if (!newUser.name || !newUser.email || !newUser.password) {
+    throw new NotFoundException('Name, email, and password are required fields.');
+  }
+  else if (this.users.some(user => user.email === newUser.email)) {
+    throw new NotFoundException(`User with email ${newUser.email} already exists.`);
+  }
+
   this.users.push(newUser);
 
   console.log(newUser);
@@ -82,9 +91,9 @@ export class UsersService {
 
     findOne(id: number) {
     const user = this.users.find(user => user.id === id);
-
+    
     if(!user){throw new NotFoundException(`User not found, does not exist`);}
-
+      
     return user
   }
 
@@ -98,7 +107,7 @@ export class UsersService {
     });
 
 
-    return this.findOne(id)
+    // return this.findOne(id)
   }
 
   remove(id: number) {
