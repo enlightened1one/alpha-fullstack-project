@@ -5,6 +5,7 @@ import { UsersService } from './users.service';
 // import { UpdateUserDto } from './dto/update-user.dto';
 import { Prisma } from 'generated/prisma';
 import { DatabaseService } from 'src/database/database.service';
+import { error } from 'node:console';
 
 @Controller('users')
 export class UsersController {
@@ -36,8 +37,15 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
-    console.log('this user has finally been found')
-    return this.db.users.findUnique({ where: { id } }) ;
+   
+    if(id!){
+      console.warn(`user with id:${id} does not exist`)
+      return `user with id:${id} does not exist`
+    }
+    else{
+       console.log('this user has finally been found')
+    return this.db.users.findUnique({ where: { id } });
+    }
 
   }
 
@@ -45,7 +53,6 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
      return this.db.users.delete({ where: { id } });
-
   }
 
 
