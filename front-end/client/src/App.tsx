@@ -14,17 +14,13 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <div  className='bg-[#181818]' >
+    <div  className='bg-[#181818] min-h-screen' >
       <h1 className='text-3xl font-bold text-yellow-500'>SchoolMan Admin</h1>
 
-
-
-      {/* ---------------------------------------------- */}
-      {/* <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+      <div className='flex justify-center items-center h-screen'>
         <CardComponent />
-        <Input className="border border-gray-300 p-2 rounded-md" placeholder="Type something..." />
-        
-    </div> */}
+      </div>
+
 
     <LoginFormComponent/>
     </div>
