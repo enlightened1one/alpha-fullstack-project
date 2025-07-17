@@ -1,19 +1,57 @@
 // import { User } from './entities/user.entity';
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, ValidationPipe, Res, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
+import * as bcrypt from 'bcrypt'
 // import { CreateUserDto } from './dto/create-user.dto';
 // import { UpdateUserDto } from './dto/update-user.dto';
 import { Prisma } from 'generated/prisma';
 import { DatabaseService } from 'src/database/database.service';
-import { error } from 'node:console';
+import { HttpStatus } from '@nestjs/common';
+import { response as RES, response } from 'express';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService, private db: DatabaseService) {}
 
+  // @Post()
+  // create(@Body(ValidationPipe) user: Prisma.UsersCreateInput, @Res() RES: Response) {
+  //   if(!user){
+  //     console.warn('user is not defined')
+  //     return 'user is not defined'
+  //   }
+  //   else if(RES.status === 500){
+  //     console.error('user already exists')
+  //     return 'user already exists'
+
+  //   }
+  //   else{
+  //     console.log('user has been created successfully');
+  //     return this.db.users.create({ data: user });
+  //   }
+  // }
+
   @Post()
-  create(@Body(ValidationPipe) user: Prisma.UsersCreateInput) {
-    return this.db.users.create({ data: user });
+  async create(@Body()  user: Prisma.UsersCreateInput ){
+
+    try{
+      const hiddenPassword = await bcrypt.hash(user.password, 10);
+      const createdUser = await this.db.users.create({ data: { ...user, password: hiddenPassword } });
+      console.log('User created successfully:', createdUser);
+      return {
+        message: `User with email: ${user.email} created succesfully`,
+        user: {createdUser, password: hiddenPassword}  ,  
+      };
+    }
+    catch(error){
+        if(error.code === 'P2002'){
+         
+          console.error(`user with email: ${user.email} already exists`);
+          throw new BadRequestException('User Already Exists')
+        }
+        else{
+          throw new BadRequestException(`Error occurred while creating the user could be due to poor network connectivity or something which I haven't handled yet`);
+        }
+    }
   }
 
 
