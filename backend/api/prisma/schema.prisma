@@ -10,7 +10,7 @@ datasource db {
 }
 
 model Users {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid()) @db.Uuid
   name      String
   email     String   @unique
   createdAt DateTime @default(now())
@@ -31,7 +31,7 @@ enum userRole {
 }
 
 model Teachers {
-  id        String      @id @default(uuid()) @db.Uuid
+  id          Int      @id @default(autoincrement())
   name      String
   email     String   @unique
   createdAt DateTime @default(now())

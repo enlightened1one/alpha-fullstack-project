@@ -51,54 +51,55 @@ export class UsersService {
 
 
 
-  //   create(createUserDto: Prisma.UsersCreateInput) {
-  //   const usersByHighestId = [...this.users].sort((a,b) => b.id - a.id)
-  //   const newUser = {
-  //     id: usersByHighestId[0].id + 1,
-  //     ...createUserDto
-  //   }
-  //   this.users.push(newUser)
+    create(createUserDto: Prisma.UsersCreateInput) {
+    const usersByHighestId = [...this.users].sort((a,b) => b.id - a.id)
+    const newUser = {
+      id: usersByHighestId[0].id + 1,
+      ...createUserDto
+    }
+    this.users.push(this.users)
 
-  //   console.log(newUser);
-  //   return newUser;
-  // }
-
-
-  create(createUserDto: Prisma.UsersCreateInput) {
-  const usersByHighestId = [...this.users].sort((a, b) => b.id - a.id);
-
-  const newId = usersByHighestId.length > 0 ? usersByHighestId[0].id + 1 : 1;
-
-  const newUser = {
-    id: newId,
-    ...createUserDto,
-  };
-
-  // ifError(!newUser.name || !newUser.email || !newUser.password, 'Name, email, and password are required fields.');
-    if (!newUser.name || !newUser.email || !newUser.password) {
-    throw new NotFoundException('Name, email, and password are required fields.');
-  }
-  else if (this.users.some(user => user.email === newUser.email)) {
-    throw new NotFoundException(`User with email ${newUser.email} already exists.`);
+    console.log(this.users);
+    return this.users;
   }
 
-  this.users.push(newUser);
 
-  console.log(newUser);
-  return newUser;
-}
+//   create(createUserDto: Prisma.UsersCreateInput) {
+//   const usersByHighestId = [...this.users].sort((a, b) => b.id - a.id);
+
+//   const newId = usersByHighestId.length > 0 ? usersByHighestId[0].id + 1 : 1;
+
+//   const newUser = {
+//     id: newId,
+//     ...createUserDto,
+//   };
+
+//   // ifError(!newUser.name || !newUser.email || !newUser.password, 'Name, email, and password are required fields.');
+//     if (!newUser.name || !newUser.email || !newUser.password) {
+//     throw new NotFoundException('Name, email, and password are required fields.');
+//   }
+//   else if (this.users.some(user => user.email === newUser.email)) {
+//     throw new NotFoundException(`User with email ${newUser.email} already exists.`);
+//   }
+
+//   this.users.push(newUser);
+
+//   console.log(newUser);
+//   return newUser;
+// }
 
 
-    findOne(id: number) {
+    findOne(id: string) {
     const user = this.users.find(user => user.id === id);
     
-    if(!user){throw new NotFoundException(`User not found, does not exist`);}
+    if(!user){
+      throw new NotFoundException(`User not found, does not exist`);}
       
     return user
   }
 
 
-    update(id: number , updateUserDto: Prisma.UsersUpdateInput) {
+    update(id: string , updateUserDto: Prisma.UsersUpdateInput) {
     this.users = this.users.map(user => {
       if(user.id === id){
         return {...user, ...updateUserDto}
@@ -110,7 +111,7 @@ export class UsersService {
     // return this.findOne(id)
   }
 
-  remove(id: number) {
+  remove(id: string) {
     this.users = this.users.filter(user => user.id !== id);
   }
   ///////////////MY CUSTOM METHODS CONCLUSION//////////////////////////////

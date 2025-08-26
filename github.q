@@ -109,3 +109,25 @@ DATABASE_URL="postgresql://neondb_owner:npg_T0k6pbIVEDiy@ep-summer-sound-a5sq5bh
       }
       return user;
     });
+
+
+
+
+
+
+
+
+
+    ///////////////////////////////FOR DISCONNECTING FROM DB AFTER A PARTICULAR OPERATION////////////////////////////////////////
+
+    main()
+  .then(() => {
+    console.log('Seed data inserted');
+    return prisma.$disconnect();
+  })
+  .catch((e) => {
+    console.error('Error seeding data:', e);
+    return prisma.$disconnect();
+  });
+
+      ///////////////////////////////FOR DISCONNECTING FROM DB AFTER A PARTICULAR OPERATION////////////////////////////////////////

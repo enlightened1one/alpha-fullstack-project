@@ -6,8 +6,6 @@ import * as bcrypt from 'bcrypt'
 // import { UpdateUserDto } from './dto/update-user.dto';
 import { Prisma } from 'generated/prisma';
 import { DatabaseService } from 'src/database/database.service';
-import { HttpStatus } from '@nestjs/common';
-import { response as RES, response } from 'express';
 
 @Controller('users')
 export class UsersController {
@@ -68,28 +66,53 @@ export class UsersController {
 
 
     @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) updatedUser: Prisma.UsersUpdateInput ) {
-    return this.db.users.update({ where: { id }, data: updatedUser });
+  update(@Param('id') id: string, @Body(ValidationPipe) updatedUser: Prisma.UsersUpdateInput ) {
+    return this.db.users.update({ where: {id}, data: updatedUser });
   }
 
 
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-   
-    if(id!){
-      console.warn(`user with id:${id} does not exist`)
-      return `user with id:${id} does not exist`
+
+
+    @Get(':id')
+   async findOne(@Param('id') id: string) {
+    //  console.log(`id: ${id}`)
+       const exist = await this.db.users.findUnique({ where: { id } });
+
+    try{
+      console.log('this user has finally been found')
+      return this.db.users.findUnique({ where: { id } });
     }
-    else{
-       console.log('this user has finally been found')
-    return this.db.users.findUnique({ where: { id } });
+    catch(error){
+      if(!id){
+        console.warn(`user with id:${id} does not exist`)
+        return `user with id:${id} does not exist`
+      }
+
     }
 
   }
+
+
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   //  console.log(`id: ${id}`)
+  //      const exist = this.db.users.findUniqueOrThrow({ where: { id } });
+
+  //   if(!exist){
+  //     console.warn(`user with id:${id} does not exist`)
+  //     return `user with id:${id} does not exist`
+  //   }
+  //   else if(exist){
+  //     console.log('this user has finally been found')
+  //    return this.db.users.findUnique({ where: { id } });
+  //   }
+  //   else {return ("something went wrong")};
+
+  // }
 
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: string) {
      return this.db.users.delete({ where: { id } });
   }
 
